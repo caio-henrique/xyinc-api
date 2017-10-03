@@ -12,7 +12,7 @@ public interface PoiGateway {
 	
 	public Poi buscar(long identificador);
 
-	public void atualizar(long identificador, Poi poi);
+	public Poi atualizar(long identificador, Poi poi);
 	
 	public void excluir(long identificador);
 }

@@ -1,9 +1,21 @@
 package com.xyinc.xyinc.api.core.boundary;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 public class PoiRequestModel {
 
+	@NotBlank
 	private String nome;
+	
+	@Min(1)
+	@NotNull
 	private Integer coordenadaX;
+	
+	@Min(1)
+	@NotNull
 	private Integer coordenadaY;
 	
 	@SuppressWarnings("unused")

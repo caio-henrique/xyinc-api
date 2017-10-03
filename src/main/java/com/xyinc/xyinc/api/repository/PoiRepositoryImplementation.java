@@ -3,13 +3,13 @@ package com.xyinc.xyinc.api.repository;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import com.xyinc.xyinc.api.core.entity.Poi;
 import com.xyinc.xyinc.api.core.gateway.PoiGateway;
 
-@Controller
-public class Repositorio implements PoiGateway {
+@Service
+public class PoiRepositoryImplementation implements PoiGateway {
 	
 	@Autowired
 	private PoiRepository repository;
@@ -31,15 +31,15 @@ public class Repositorio implements PoiGateway {
 	}
 
 	@Override
-	public void atualizar(long identificador, Poi poi) {
-		// TODO Auto-generated method stub
+	public Poi atualizar(long identificador, Poi poi) {
 		
+		this.excluir(identificador);
+		this.gravar(poi);
+		return poi;
 	}
 
 	@Override
 	public void excluir(long identificador) {
-		// TODO Auto-generated method stub
-		
+		repository.delete(identificador);
 	}
-
 }

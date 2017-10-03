@@ -1,18 +1,12 @@
 package com.xyinc.xyinc.api.core.entity;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Coordenada {
 
-	@Min(0)
-	@NotNull
 	private Integer coordenadaX;
 	
-	@Min(0)
-	@NotNull
 	private Integer coordenadaY;
 	
 	@SuppressWarnings("unused")

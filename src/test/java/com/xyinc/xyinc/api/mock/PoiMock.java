@@ -25,8 +25,10 @@ public class PoiMock implements PoiGateway {
 	}
 
 	@Override
-	public void atualizar(long identificador, Poi poi) {
-		todosPois.replace(identificador, poi);
+	public Poi atualizar(long identificador, Poi poi) {
+		this.excluir(identificador);
+		this.gravar(poi);
+		return poi;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public interface PoiBoundary {
 	
 	public Poi buscar(long identificador);
 	
-	public void atualizar(long identificador, PoiRequestModel poiRequestModel);
+	public Poi atualizar(long identificador, PoiRequestModel poiRequestModel);
 	
 	public void excluir(long identificador);
 }

@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xyinc.xyinc.api.core.boundary.PoiBoundary;
@@ -22,14 +26,14 @@ import com.xyinc.xyinc.api.core.boundary.PoiRequestModel;
 import com.xyinc.xyinc.api.core.entity.Poi;
 import com.xyinc.xyinc.api.core.usercase.CadastrarPoi;
 import com.xyinc.xyinc.api.event.RecursoCriadoEvent;
-import com.xyinc.xyinc.api.repository.Repositorio;
+import com.xyinc.xyinc.api.repository.PoiRepositoryImplementation;
 
 @RestController
 @RequestMapping("/poi")
 public class PoiResources {
 	
 	@Autowired
-	private Repositorio repositorio;
+	private PoiRepositoryImplementation repositorio;
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -60,9 +64,20 @@ public class PoiResources {
 		return poiResponse != null ? ResponseEntity.ok(poiResponse) : ResponseEntity.notFound().build();
 	}
 	
-	@GetMapping("/{coordenadaX}/{coordenadaY}/{distancia}")
-	public Collection<Poi> buscar(@PathVariable Integer coordenadaX, 
-			@PathVariable Integer coordenadaY, @PathVariable Integer distancia) {
+	@GetMapping("/ponto-de-interesse")
+	public Collection<Poi> buscar(@RequestParam("coordenadaX") Integer coordenadaX, 
+			@RequestParam("coordenadaY") Integer coordenadaY, @RequestParam("distancia") Integer distancia) {
 		return boundary.listar(coordenadaX, coordenadaY, distancia);
+	}
+	
+	@DeleteMapping("/{identificador}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long identificador) {
+		boundary.excluir(identificador);
+	}
+	
+	@PutMapping("/{identificador}")
+	public Poi atualizar(@PathVariable Long identificador, @Valid @RequestBody PoiRequestModel requestModel) {
+		return boundary.atualizar(identificador, requestModel);
 	}
 }

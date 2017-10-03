@@ -8,10 +8,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.validator.HibernateValidator;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.xyinc.xyinc.api.core.boundary.PoiBoundary;
 import com.xyinc.xyinc.api.core.boundary.PoiRequestModel;
@@ -26,8 +24,6 @@ public class CadastrarPoiTest {
 	private Integer coordenadaX = 27;
 	private Integer coordenadaY = 12;
 	
-	private LocalValidatorFactoryBean localValidatorFactory;
-	
 	@Before
 	public void inicializar() {
 		requestModel = new PoiRequestModel.Builder()
@@ -35,10 +31,6 @@ public class CadastrarPoiTest {
 				.coordenadaX(coordenadaX)
 				.coordenadaY(coordenadaY)
 				.build();
-		
-		localValidatorFactory = new LocalValidatorFactoryBean();
-	    localValidatorFactory.setProviderClass(HibernateValidator.class);
-	    localValidatorFactory.afterPropertiesSet();
 	}
 
 	@Test
@@ -51,15 +43,43 @@ public class CadastrarPoiTest {
 		assertEquals(1, identificador);
 	}
 	
-	//@Test
-	/*public void criarPoiNulo() {
+	@Test
+	public void criarPoiNulo() {
 		PoiMock mock = new PoiMock();
 		CadastrarPoi iterator = new CadastrarPoi(mock);
 		
-		iterator.criar(null);
+		long identificador = iterator.criar(null);
 		
-		assertFalse(localValidatorFactory.validate(iterator).isEmpty());
-	}*/
+		assertEquals(0, identificador);
+	}
+	
+	@Test
+	public void criarPoiCoordenadasNegativas() {
+		PoiMock mock = new PoiMock();
+		CadastrarPoi iterator = new CadastrarPoi(mock);
+		
+		long identificador = iterator.criar(new PoiRequestModel.Builder()
+				.nome("Teste Poi 2")
+				.coordenadaX(-12)
+				.coordenadaY(27)
+				.build());
+		
+		assertEquals(0, identificador);
+	}
+	
+	@Test
+	public void criarPoiNomeNulo() {
+		PoiMock mock = new PoiMock();
+		CadastrarPoi iterator = new CadastrarPoi(mock);
+		
+		long identificador = iterator.criar(new PoiRequestModel.Builder()
+				.nome(null)
+				.coordenadaX(12)
+				.coordenadaY(27)
+				.build());
+		
+		assertEquals(0, identificador);
+	}
 	
 	@Test
 	public void atualizar() {
@@ -74,8 +94,7 @@ public class CadastrarPoiTest {
 		
 		assertEquals(1, identificador);
 		
-		iterator.atualizar(identificador, requestModel);
-		Poi poi = iterator.buscar(identificador);
+		Poi poi = iterator.atualizar(identificador, requestModel);
 		
 		assertNotNull(poi);
 		assertEquals(nome, poi.getNome());

@@ -19,6 +19,10 @@ public class CadastrarPoi implements PoiBoundary{
 
 	@Override
 	public long criar(final PoiRequestModel requestModel) {
+		
+		if(!this.requestModelValido(requestModel))
+			return 0;
+		
 		Coordenada coordenada = new Coordenada(requestModel.getCoordenadaX(), 
 				requestModel.getCoordenadaY());
 		Poi poi = new Poi(requestModel.getNome(), coordenada);
@@ -32,13 +36,13 @@ public class CadastrarPoi implements PoiBoundary{
 	}
 
 	@Override
-	public void atualizar(final long identificador, 
+	public Poi atualizar(final long identificador, 
 			final PoiRequestModel requestModel) {
 		Coordenada coordenada = new Coordenada(requestModel.getCoordenadaX(), 
 				requestModel.getCoordenadaY());
 		Poi poi = new Poi(requestModel.getNome(), coordenada);
 		
-		gateway.atualizar(identificador, poi);
+		return gateway.atualizar(identificador, poi);
 	}
 
 	@Override
@@ -69,5 +73,15 @@ public class CadastrarPoi implements PoiBoundary{
 		}
 		
 		return poisLocalizados;
+	}
+	
+	private boolean requestModelValido(final PoiRequestModel requestModel) {
+		
+		if(requestModel == null || requestModel.getNome() == null || requestModel.getNome().isEmpty() ||
+				requestModel.getCoordenadaX() == null || requestModel.getCoordenadaX() <= 0 ||
+				requestModel.getCoordenadaY() == null || requestModel.getCoordenadaY() <= 0 )
+			return false;
+		
+		return true;
 	}
 }
